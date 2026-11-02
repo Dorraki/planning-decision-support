@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.*cache/
+
+# Secrets
+.env
+
+# Planning documents, case packs and pipeline outputs are not redistributed
+data/
+outputs/
+
+# macOS
+.DS_Store

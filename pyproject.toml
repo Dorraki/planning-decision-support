@@ -1,0 +1,103 @@
+[project]
+name = "planning-decision-support"
+version = "0.1.0"
+description = "LLM pipeline that drafts planning decisions with cited policy reasons for officer review"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "kreuzberg>=4.2.2",
+    "loguru>=0.7.3",
+    "openai>=1.50.0",
+    "pillow>=12.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.1.1",
+    "typer>=0.21.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/" = ""
+
+[project.scripts]
+assess = "main:app"
+extract = "pdf_extract:app"
+policy-index = "policy_index:app"
+case-loader = "case_loader:app"
+evaluate = "evaluate:app"
+baseline = "baseline:app"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.1.0",
+    "pytest>=8.3.5",
+    "ruff>=0.14.14",
+]
+
+[tool.ruff]
+fix = true
+unsafe-fixes = false
+
+[tool.ruff.lint]
+select = [
+    "F",  # default Ruff rules
+    "E",  # pycodestyle Errors
+    "W",  # pycodestyle Warnings
+    "I",  # import sorting
+    "UP", # modern syntax updates
+    "B",  # flake8 common pitfalls & best practices
+    "Q",  # flake8 consistent quotes
+    "N",  # naming conventions,
+]
+
+ignore = [
+    "B008",
+    "D413",
+    "E501",
+    "W293",
+    "W291",
+    "PLR2004",
+    "D101",
+    "D400",
+
+]
+
+fixable = ["ALL"]
+
+extend-select = [
+    "PLR2004",
+    "D101",
+    "D102",
+    "D103",
+    "D201",
+    "D202",
+    "D215",
+    "T201",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Test names describe the behaviour, so they need no docstrings.
+"tests/*" = ["D103"]
+
+[tool.mypy]
+disallow_any_generics = true
+disallow_untyped_defs = true
+disallow_untyped_globals = true
+ignore_missing_imports = true
+show_error_codes = true
+strict = false
+warn_return_any = true
+plugins = ['pydantic.mypy']
+# Modules import each other by bare name (e.g. `from llm import ...`), so
+# resolve them from src/ rather than as a `src` package.
+mypy_path = "src"
+files = ["src"]
+explicit_package_bases = true
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
